@@ -81,10 +81,11 @@
       const myId = self.crypto.randomUUID().substr(0, 8)
 
       const form = document.querySelector('.form')
+      const input = document.querySelector('.input');
+      const messageList = document.querySelector('.messages');
 
       form.onsubmit = function (e) {
         e.preventDefault()
-        const input = document.querySelector('.input')
         const text = input.value
         ws.send(myId + ':' + text)
         input.value = ''
