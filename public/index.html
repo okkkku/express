@@ -72,7 +72,7 @@
           const response = msg.data
           const li = document.createElement('li')
           const messageList = null
-          if(li.split(":")[1].equals(myId)) {
+          if(li.split(":")[0].equals(myId)) {
             messageList = document.querySelector('.userMessages')
           }else {
             messageList = document.querySelector('.otherMessages')
