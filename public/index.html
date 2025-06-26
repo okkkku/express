@@ -72,7 +72,7 @@
         ws.onmessage = function (msg) {
           const response = msg.data
           const li = document.createElement('li')
-          const messageList = null
+          let messageList = null
           if(response.split(":")[0] === myId) {
             messageList = document.querySelector('.userMessages')
           }else {
