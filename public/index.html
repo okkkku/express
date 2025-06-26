@@ -87,9 +87,11 @@
       form.onsubmit = function (e) {
         e.preventDefault()
         const text = input.value
-        ws.send(myId + ':' + text)
-        input.value = ''
-        input.focus()
+        if (text !== "") {
+          ws.send(myId + ':' + text)
+          input.value = ''
+          input.focus()
+        }
       }
 
       ws.onmessage = function (msg) {
