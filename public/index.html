@@ -1,109 +1,77 @@
 <!DOCTYPE html>
 <html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat App</title>
+    <style>
+      .chat {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      }
+      .messages {
+        flex: 1;
+        overflow-y: auto;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .form {
+        display: flex;
+      }
+      .input {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #ccc;
+      }
+      .submit {
+        padding: 10px;
+        border: 1px solid #ccc;
+        background: #ffffff;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="chat">
+      <ul class="messages"></ul>
+      <form class="form">
+        <input class="input" autocomplete="off" />
+        <button class="submit">➤</button>
+      </form>
+    </div>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Chat App</title>
-  <style>
-    .chat {
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-    }
+    <script>
+      function main() {
+        const host = location.origin.replace(/^http/, 'ws')
+        const ws = new WebSocket(host + '/ws')
 
-    .messages {
-      flex: 1;
-      overflow-y: auto;
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
+        const form = document.querySelector('.form')
 
-    .user {
-      background-color: #dcf8c6;
-      /* 自分：緑っぽい */
-      align-self: flex-end;
-      /* 右寄せ */
-      margin-left: auto;
-      border-bottom-right-radius: 0;
-    }
+        form.onsubmit = function (e) {
+          e.preventDefault()
+          const input = document.querySelector('.input')
+          const text = input.value
+          ws.send(text)
+          input.value = ''
+          input.focus()
+        }
 
-    .bot {
-      background-color: #fff;
-      /* 相手：白 */
-      border: 1px solid #ccc;
-      align-self: flex-start;
-      /* 左寄せ */
-      margin-right: auto;
-      border-bottom-left-radius: 0;
-    }
+        ws.onmessage = function (msg) {
+          const response = msg.data
+          const messageList = document.querySelector('.messages')
+          const li = document.createElement('li')
+          li.textContent = response
+          messageList.appendChild(li)
+        }
 
-    .form {
-      display: flex;
-    }
-
-    .input {
-      flex: 1;
-      padding: 10px;
-      border: 1px solid #ccc;
-    }
-
-    .submit {
-      padding: 10px;
-      border: 1px solid #ccc;
-      background: #ffffff;
-      cursor: pointer;
-    }
-  </style>
-</head>
-
-<body>
-  <div class="chat">
-    <ul class="messages"></ul>
-    <form class="form">
-      <input class="input" autocomplete="off" />
-      <button class="submit">➤</button>
-    </form>
-  </div>
-
-  <script>
-    function main() {
-      const host = location.origin.replace(/^http/, 'ws')
-      const ws = new WebSocket(host + '/ws')
-
-      const form = document.querySelector('.form')
-
-      const messageList = document.querySelector('.messages')
-
-      form.onsubmit = function (e) {
-        e.preventDefault()
-        const input = document.querySelector('.input')
-        const text = input.value
-        const li = document.createElement('li')
-        li.textContent = text;
-        li.classList.add('message', 'user') // 自分のメッセージは'user'クラス
-        messageList.appendChild(li)
-        ws.send(text)
-        input.value = ''
-        input.focus()
+        ws.onerror = function (error) {
+          console.error('WebSocket Error: ', error)
+        }
       }
 
-      ws.onmessage = function (msg) {
-        const response = msg.data
-        const li = document.createElement('li')
-        li.textContent = response
-         li.classList.add('message', 'bot')
-        messageList.appendChild(li)
-      }
-
-      ws.onerror = function (error) {
-        console.error('WebSocket Error: ', error)
-      }
-    }
-
-    main()
-  </script>
-</body>
-
+      main()
+    </script>
+  </body>
 </html>
