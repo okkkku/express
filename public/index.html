@@ -10,10 +10,19 @@
         flex-direction: column;
         height: 100vh;
       }
-      .messages {
+      .userMessages {
         flex: 1;
         overflow-y: auto;
         list-style: none;
+        background: #66ff00;
+        padding: 0;
+        margin: 0;
+      }
+      .otherMessages {
+        flex: 1;
+        overflow-y: auto;
+        list-style: none;
+        background: #ffffff;
         padding: 0;
         margin: 0;
       }
@@ -61,8 +70,13 @@
 
         ws.onmessage = function (msg) {
           const response = msg.data
-          const messageList = document.querySelector('.messages')
           const li = document.createElement('li')
+          const messageList = null
+          if(li.split(":")[1].equals(myId)) {
+            messageList = document.querySelector('.userMessages')
+          }else {
+            messageList = document.querySelector('.otherMessages')
+          }
           li.textContent = response
           messageList.appendChild(li)
         }
