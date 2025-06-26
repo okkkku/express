@@ -93,24 +93,19 @@
       }
 
       ws.onmessage = function (msg) {
-        /*
-        const response = msg.data
-        const li = document.createElement('li')
-        let messageList = null
-        if (response.split(":")[0] === myId) {
-          messageList = document.querySelector('.userMessages')
-        } else {
-          messageList = document.querySelector('.otherMessages')
-        }
-        li.textContent = response
-        messageList.appendChild(li)
-        */
         const response = msg.data;
-        const [senderId, message] = response.split(':');
+        const [id, message] = response.split(':');
 
         const li = document.createElement('li');
         li.classList.add('message');
-        li.classList.add(senderId === myId ? 'user' : 'other');
+        /*
+        if(id === myId) {
+          li.classList.add('user')
+        }else {
+          li.classList.add('other')
+        }
+        */
+        li.classList.add(id === myId ? 'user' : 'other');
         li.textContent = message;
         messageList.appendChild(li);
 
